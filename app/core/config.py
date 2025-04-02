@@ -65,5 +65,17 @@ class Settings(BaseSettings):
     # def SQLALCHEMY_DATABASE_URL(self) -> str:
     #     return "sqlite:///./app.db"
 
+    # Create a connection string for other services
+    AUTH_SERVICE_BASE_URL: str = os.getenv(
+        "AUTH_SERVICE_BASE_URL"
+    )
+    if not AUTH_SERVICE_BASE_URL:
+        raise ValueError("Missing AUTH_SERVICE_BASE_URL environment variable!")
+    INVENTORY_SERVICE_BASE_URL: str = os.getenv(
+        "INVENTORY_SERVICE_BASE_URL"
+    )
+    if not INVENTORY_SERVICE_BASE_URL:
+        raise ValueError("Missing INVENTORY_SERVICE_BASE_URL environment variable!")
+    
 
 settings = Settings()

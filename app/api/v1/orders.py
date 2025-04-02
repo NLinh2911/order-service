@@ -98,8 +98,11 @@ def create_order(
             #     "request.headers.get('Authorization') ",
             #     request.headers.get("Authorization"),
             # )
+            print(
+                f"Calling INVENTORY-SERVICE at {settings.INVENTORY_SERVICE_BASE_URL}/items/{item.item_id}?change_quantity={item.quantity}"
+            )
             response = requests.patch(
-                f"{settings.INVENTORY_SERVICE_URL}/items/{item.item_id}?change_quantity={item.quantity}",
+                f"{settings.INVENTORY_SERVICE_BASE_URL}/items/{item.item_id}?change_quantity={item.quantity}",
                 headers={"Authorization": request.headers.get("Authorization")},
             )
             if response.status_code != 200:
