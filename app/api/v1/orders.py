@@ -115,7 +115,7 @@ def create_order(
         # Commit the order and all lines
         db.commit()
 
-        print("Did go here!!!!")
+        # print("Did go here!!!!")
         # The order is committed, so we can now fetch the order and checkout items
         stmt = select(OrderHeader).where(OrderHeader.order_id == new_order.order_id)
         order_header_result = db.execute(stmt).scalars().first()
