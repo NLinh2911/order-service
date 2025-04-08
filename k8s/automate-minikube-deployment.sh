@@ -1,7 +1,20 @@
 #!/bin/bash
 
 set -e
-
+set -a
+[ -f .env ] && source .env
+set +a
+# Check if GHCR_PAT is set
+if [ -z "$GHCR_PAT" ]; then
+  echo "⚠️ GHCR_PAT is not set. Please set it in your .env file."
+  exit 1
+fi
+# Check if minikube is running
+if ! minikube status &> /dev/null; then
+  echo "⚠️ Minikube is not running. Please start it first."
+  exit 1
+fi
+# Set variables
 GHCR_USER=nlinh2911
 IMAGE_TAG=latest
 K8S_DIR=./k8s
