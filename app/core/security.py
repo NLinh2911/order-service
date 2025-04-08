@@ -42,7 +42,7 @@ def validate_token(
 
         # Check expiration
         exp_timestamp = payload.get("exp")
-        if exp_timestamp is None or datetime.fromtimestamp(exp_timestamp, datetime.timezone.utc) < datetime.now(timezone.utc):
+        if exp_timestamp is None or datetime.fromtimestamp(exp_timestamp, timezone.utc) < datetime.now(timezone.utc):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token expired",
