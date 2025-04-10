@@ -18,9 +18,9 @@ fi
 GHCR_USER=nlinh2911
 IMAGE_TAG=latest
 K8S_DIR=./k8s
-IMAGES=("inventory-service" "inventory-db")
+IMAGES=("order-service" "order-db")
 
-echo "=====Automating Minikube deployment for inventory-service and inventory-db====="
+echo "=====Automating Minikube deployment for order-service and order-db====="
 echo "🔐 Logging into GHCR..."
 echo "$GHCR_PAT" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
@@ -48,8 +48,11 @@ for IMAGE in "${IMAGES[@]}"; do
   
   # Optional: remove GHCR-tagged images after retagging
   echo "🗑️ Removing GHCR images from local Docker"
-  docker rmi ghcr.io/$GHCR_USER/inventory-service:$IMAGE_TAG || true
-  docker rmi ghcr.io/$GHCR_USER/inventory-db:$IMAGE_TAG || true
+  docker rmi ghcr.io/$GHCR_USER/order-service:$IMAGE_TAG || true
+  docker rmi ghcr.io/$GHCR_USER/order-db:$IMAGE_TAG || true
+  # Clean up dangling images
+  echo "🧹 Cleaning up unused Docker images..."
+  docker image prune -a -f
 
   echo
 done
@@ -57,11 +60,11 @@ done
 echo "🚀 Applying Kubernetes manifests from $K8S_DIR..."
 minikube kubectl -- apply -f "$K8S_DIR"
 
-echo "🔁 Restarting inventory-service Deployment..."
-minikube kubectl -- rollout restart deployment inventory-service --namespace=stox
+echo "🔁 Restarting order-service Deployment..."
+minikube kubectl -- rollout restart deployment order-service --namespace=stox
 
-echo "🔁 Restarting inventory-db StatefulSet..."
-minikube kubectl -- patch statefulset inventory-db --namespace=stox \
+echo "🔁 Restarting order-db StatefulSet..."
+minikube kubectl -- patch statefulset order-db --namespace=stox \
   -p '{"spec":{"template":{"metadata":{"annotations":{"restartedAt":"'"$(date)"'"}}}}}'
 
 echo "✅ Rollout complete!!!!"
